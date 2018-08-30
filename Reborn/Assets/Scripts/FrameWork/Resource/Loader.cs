@@ -86,6 +86,11 @@ namespace FrameWork.Resource
             Reset();
         }
 
+        public void ChangeToSync()
+        {
+            m_Async = false;
+        }
+
         protected virtual void Reset()
         {
             m_Path = "";
