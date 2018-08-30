@@ -1,6 +1,4 @@
 ﻿using FrameWork.Helper;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace FrameWork.Resource
@@ -15,12 +13,12 @@ namespace FrameWork.Resource
         int m_stageCount = 1;
 
         public BundleLoader()
-            : base(Loader.LoaderType.Bundle)
+            : base(LoaderType.Bundle)
         {
 
         }
 
-        protected override void Reset()
+        public override void Reset()
         {
             base.Reset();
 
@@ -61,7 +59,7 @@ namespace FrameWork.Resource
                     {
                         byte[] bytes = FileHelper.ReadByteFromFile(path);
                         byte[] result = new byte[1];
-                        int size = LzmaHelper.Uncompress(bytes, ref result);
+                        int size = LZMAHelper.Uncompress(bytes, ref result);
                         if (size == 0)
                         {
                             UnityEngine.Debug.Log("Uncompress Failed");

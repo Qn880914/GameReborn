@@ -1,7 +1,4 @@
 ﻿using FrameWork.Utility;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace FrameWork.Helper
 {
@@ -22,6 +19,73 @@ namespace FrameWork.Helper
         public LZMACompressRequest()
         { }
 
+        public void Compress(byte[] data)
+        {
+            Loom.RunAsync(new LoomBase(), delegate (LoomBase param)
+            {
+                try
+                {
+                    m_Data = new byte[1];
+                    int size = LZMAHelper.Compress(data, ref m_Data);
+                    if (size == 0)
+                    {
+                        m_Error = "Compress Failed";
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    m_Error = e.Message;
+                }
+                finally
+                {
+                    Loom.QueueOnMainThread(param, OnDone);
+                }
+            });
+        }
 
+        public void Decompress(byte[] data)
+        {
+            Loom.RunAsync(new LoomBase(), delegate (LoomBase param)
+            {
+                try
+                {
+                    m_Data = new byte[1];
+                    int size = LZMAHelper.Uncompress(data, ref m_Data);
+                    if (size == 0)
+                    {
+                        m_Error = "Compress Failed";
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    m_Error = e.Message;
+                }
+                finally
+                {
+                    Loom.QueueOnMainThread(param, OnDone);
+                }
+            });
+        }
+
+        public static LZMACompressRequest CreateCompress(byte[] data)
+        {
+            LZMACompressRequest request = new LZMACompressRequest();
+            request.Compress(data);
+
+            return request;
+        }
+
+        public static LZMACompressRequest CreateDecompress(byte[] data)
+        {
+            LZMACompressRequest request = new LZMACompressRequest();
+            request.Decompress(data);
+
+            return request;
+        }
+
+        void OnDone(LoomBase param)
+        {
+            m_IsDone = true;
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using FrameWork.Utility;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -40,8 +40,7 @@ namespace FrameWork.Resource
         }
 
         private UnityAction<float> m_Progress;
-
-        private List<Loader> m_LoaderPool = new List<Loader>();
+        
         private List<Loader> m_Loaders = new List<Loader>();
         private Queue<Loader> m_LoaderQueue = new Queue<Loader>();
 
@@ -75,7 +74,7 @@ namespace FrameWork.Resource
                     m_Loaders.RemoveAt(index);
                     if(!m_LoaderQueue.Contains(loader))
                     {
-                        m_LoaderPool.Add(loader);
+                        LoaderPool.Release(loader);
                     }
 
                     CheckNextTask();
@@ -227,49 +226,7 @@ namespace FrameWork.Resource
             }
 
             return waitList.callbacks.Count;
-        }
-
-        private Loader GetLoader(Loader.LoaderType type)
-        {
-            Loader loader = null;
-            for(int i = 0; i < m_LoaderPool.Count; ++ i)
-            {
-                if(m_LoaderPool[i].type == type)
-                {
-                    loader = m_LoaderPool[i];
-                    m_LoaderPool.RemoveAt(i);
-                    break;
-                }
-            }
-
-            if(null == loader)
-            {
-                switch(type)
-                {
-                    case Loader.LoaderType.Stream:
-                        loader = new StreamLoader();
-                        break;
-
-                    case Loader.LoaderType.Asset:
-                        loader = new AssetLoader();
-                        break;
-
-                    case Loader.LoaderType.Scene:
-                        loader = new SceneLoader();
-                        break;
-
-                    case Loader.LoaderType.Resources:
-                        loader = new ResourceLoader();
-                        break;
-
-                    case Loader.LoaderType.Bundle:
-                        loader = new BundleLoader();
-                        break;
-                }
-            }
-
-            return loader;
-        }
+        }        
 
         private void ClearLoader()
         {
@@ -278,16 +235,23 @@ namespace FrameWork.Resource
                 m_Loaders[i].Stop();
             }
 
-            m_LoaderPool.AddRange(m_Loaders);
-            m_LoaderPool.AddRange(m_LoaderQueue);
+            for(int i = 0; i < m_Loaders.Count; ++ i)
+            {
+                LoaderPool.Release(m_Loaders[i]);
+            }
+
+            for (int i = 0; i < m_LoaderQueue.Count; ++i)
+            {
+                LoaderPool.Release(m_LoaderQueue.Dequeue());
+            }
 
             m_Loaders.Clear();
             m_LoaderQueue.Clear();
         }
 
-        private Loader AddLoadTask(Loader.LoaderType type, string path, object param, UnityAction<Loader, object> callback, bool async)
+        private Loader AddLoadTask(LoaderType type, string path, object param, UnityAction<Loader, object> callback, bool async)
         {
-            Loader loader = GetLoader(type);
+            Loader loader = LoaderPool.Get(type);
             loader.Init(path, param, OnLoadProgress, callback, async);
 
             if(!async)
@@ -312,9 +276,9 @@ namespace FrameWork.Resource
             return loader;
         }
 
-        public void AddLoadTask(Loader.LoaderType type, string path, object param, UnityAction<object> callback, bool async)
+        public void AddLoadTask(LoaderType type, string path, object param, UnityAction<object> callback, bool async)
         {
-            if (type != Loader.LoaderType.Scene && type != Loader.LoaderType.Bundle)
+            if (type != LoaderType.Scene && type != LoaderType.Bundle)
             {
                 if (CheckWaitLoading(path, callback) != null)
                 {
@@ -329,14 +293,14 @@ namespace FrameWork.Resource
                     callback(data);
                 }
 
-                if (type != Loader.LoaderType.Scene && type != Loader.LoaderType.Bundle)
+                if (type != LoaderType.Scene && type != LoaderType.Bundle)
                 {
                     WaitLoadingFinish(path, data);
                 }
             }, async);
 
             //只有异步加载才有所谓等待列表
-            if (async && type != Loader.LoaderType.Scene)
+            if (async && type != LoaderType.Scene)
             {
                 SetWaitLoader(path, ldr);
             }
