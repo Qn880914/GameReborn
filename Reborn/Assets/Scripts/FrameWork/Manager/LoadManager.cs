@@ -10,6 +10,8 @@ namespace FrameWork.Manager
         private AssetBundleManifest m_Manifest;
         private List<string> m_BundleNames = new List<string>();
 
+        private AssetBundleMapping m_mapping;
+
         private void LoadManifest()
         {
             if(null != m_Manifest)
@@ -19,6 +21,14 @@ namespace FrameWork.Manager
             }
 
             m_BundleNames.Clear();
+        }
+
+        public void LoadAsset(string path, System.Type type, UnityAction<T> callback, bool async = true, bool persistent = false, bool unload = false, bool inData = true)
+        {
+            if(ConstantData.enableAssetBundle)
+            {
+
+            }
         }
 
         private void LoadAssetBundle(string path, UnityAction<object> actionLoaded, bool async = true, bool persistent = false, bool manifest = true)
