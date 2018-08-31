@@ -13,7 +13,7 @@ namespace FrameWork.Resource
 
         }
 
-        protected override void Reset()
+        public override void Reset()
         {
             base.Reset();
 

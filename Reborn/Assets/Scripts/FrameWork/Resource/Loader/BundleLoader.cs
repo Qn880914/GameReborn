@@ -34,7 +34,7 @@ namespace FrameWork.Resource
             base.Load();
             string path = m_Path;
 
-            m_needUnpack = ConstantData.EnableUnpack && path.Contains(ConstantData.StreamingAssetsPath);
+            m_needUnpack = ConstantData.enableUnpack && path.Contains(ConstantData.streamingAssetsPath);
 
             if (m_Async)
             {

@@ -8,7 +8,7 @@ namespace FrameWork.Resource
         AsyncOperation m_request = null;
 
         public SceneLoader()
-            : base(Loader.LoaderType.Scene)
+            : base(LoaderType.Scene)
         {
 
         }
