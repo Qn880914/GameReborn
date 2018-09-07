@@ -327,7 +327,7 @@ namespace FrameWork.Resource
             CheckNextTask(true);
         }
 
-        void RefreshLoadProgress(float addRate)
+        private void RefreshLoadProgress(float addRate)
         {
             float rate = addRate;
             int count = m_CountTotal;
@@ -354,7 +354,7 @@ namespace FrameWork.Resource
             }
         }
 
-        void OnLoadProgress(Loader loader, float rate)
+        private void OnLoadProgress(Loader loader, float rate)
         {
             if (!loader.async)
             {

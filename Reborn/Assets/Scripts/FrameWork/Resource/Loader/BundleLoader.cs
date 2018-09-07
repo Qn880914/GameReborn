@@ -5,7 +5,6 @@ namespace FrameWork.Resource
 {
     public class BundleLoader : Loader
     {
-
         AssetBundleCreateRequest m_abRequest = null;
         LZMACompressRequest m_decompressRequest = null;
         bool m_needUnpack = false;
@@ -14,9 +13,7 @@ namespace FrameWork.Resource
 
         public BundleLoader()
             : base(LoaderType.Bundle)
-        {
-
-        }
+        { }
 
         public override void Reset()
         {

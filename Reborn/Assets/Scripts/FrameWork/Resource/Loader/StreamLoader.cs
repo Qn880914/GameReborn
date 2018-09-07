@@ -9,9 +9,7 @@ namespace FrameWork.Resource
 
         public StreamLoader()
             : base(LoaderType.Stream)
-        {
-
-        }
+        {}
 
         public override void Reset()
         {

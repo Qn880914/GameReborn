@@ -9,9 +9,7 @@ namespace FrameWork.Resource
 
         public SceneLoader()
             : base(LoaderType.Scene)
-        {
-
-        }
+        { }
 
         public override void Load()
         {

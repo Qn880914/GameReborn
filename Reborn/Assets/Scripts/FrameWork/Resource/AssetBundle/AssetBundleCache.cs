@@ -108,6 +108,7 @@ namespace FrameWork.Resource
                 bool unloadAllLoadedObject = false;
                 if (m_Name.Contains("atlas"))
                 {
+                    // 图集总是卸载不掉,所以图集强制卸载
                     unloadAllLoadedObject = true;
                 }
 

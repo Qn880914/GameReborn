@@ -20,6 +20,8 @@ public class ConstantData
 
     public const string abPath = "ab";     // AssetBundle相对路径
 
+    public static readonly string abExtend = ".ab";    // assetbundle 后缀
+
     static string m_StreamingAssetsPath;    // 资源的ab包绝对路径
     public static string streamingAssetsPath
     {
@@ -32,4 +34,7 @@ public class ConstantData
             return m_StreamingAssetsPath;
         }
     }
+
+    private static bool m_EnableMd5Name = false;
+    public static bool enableMd5Name { get { return m_EnableMd5Name; } set { m_EnableMd5Name = value; } }
 }
