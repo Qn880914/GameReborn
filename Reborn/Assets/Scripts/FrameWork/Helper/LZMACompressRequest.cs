@@ -2,16 +2,16 @@
 
 namespace FrameWork.Helper
 {
-    public class LZMACompressRequest : Disposable
+    public sealed class LZMACompressRequest : Disposable
     {
         private byte[] m_Data;
-        public byte[] datas { get { return m_Data; } }
+        public byte[] datas { get { return this.m_Data; } }
 
         private float m_Progress;
-        public float progress { get { return m_Progress; } }
+        public float progress { get { return this.m_Progress; } }
 
         private bool m_IsDone;
-        public bool isDone { get { return m_IsDone; } }
+        public bool isDone { get { return this.m_IsDone; } }
 
         private string m_Error;
         public string error { get { return m_Error; } }

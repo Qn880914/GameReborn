@@ -1,12 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ConstantData
 {
+    public static string version = "1.0";
+
     public static float assetBundleCacheTime = 10;  // assetbundle 缓存时间
 
-    public const string ASSETBUNDLE_MANIFEST = "data";
+    public const string assetBundleManifest = "data";
+
+    public const string assetBundleMappingPath = "Assets/Data/assetbundlemapping.asset";
+
+    public const string assetBundleMappingName = "assetbundleMapping";
 
 #if UNITY_EDITOR
     public static bool enableAssetBundle = false;
@@ -22,16 +26,16 @@ public class ConstantData
 
     public static readonly string abExtend = ".ab";    // assetbundle 后缀
 
-    static string m_StreamingAssetsPath;    // 资源的ab包绝对路径
-    public static string streamingAssetsPath
+    static string m_AssetBundleAbsolutePath;    // 资源的ab包绝对路径
+    public static string assetBundleAbsolutePath
     {
         get
         {
-            if (string.IsNullOrEmpty(m_StreamingAssetsPath))
+            if (string.IsNullOrEmpty(m_AssetBundleAbsolutePath))
             {
-                m_StreamingAssetsPath = string.Format("{0}/{1}", Application.streamingAssetsPath, abPath);
+                m_AssetBundleAbsolutePath = string.Format("{0}/{1}", Application.streamingAssetsPath, abPath);
             }
-            return m_StreamingAssetsPath;
+            return m_AssetBundleAbsolutePath;
         }
     }
 

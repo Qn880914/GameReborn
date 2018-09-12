@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace FrameWork.Helper
 {
-    public class LZMAHelper
+    public sealed class LZMAHelper
     {
 #if (UNITY_IOS || UNITY_WEBGL || UNITY_IPHONE) && !UNITY_EDITOR
 

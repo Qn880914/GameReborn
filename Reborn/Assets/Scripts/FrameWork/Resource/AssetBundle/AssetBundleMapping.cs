@@ -1,31 +1,64 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 namespace FrameWork.Resource
 {
-
-    public class AssetBundleMapping : ScriptableObject
+    public sealed class AssetBundleMapping : ScriptableObject
     {
-        [Serializable]
-        public class AssetBundleInfo
+        public List<AssetBundleInfo> assetBundleInfos { get; set; }
+
+        private Dictionary<string, string> m_FileMatchAssetBundleName;
+
+        public void Init(Dictionary<string, HashSet<string>> assetbundleMapFilePaths)
         {
-            public string name;
-            public string[] files;
+            assetBundleInfos = new List<AssetBundleInfo>(assetbundleMapFilePaths.Count); 
+            foreach(var map in assetbundleMapFilePaths)
+            {
+                AssetBundleInfo info = new AssetBundleInfo();
+                info.name = map.Key.ToLower();
+                info.files = new string[map.Value.Count];
+
+                int index = 0;
+                foreach(var filePath in map.Value)
+                {
+                    info.files[index++] = filePath.Replace("\\", "/").Replace("Assets/Data", "").Replace("Assets/", "").ToLower();
+
+                    try
+                    {
+                        m_FileMatchAssetBundleName.Add(filePath, map.Key);
+                    }
+                    catch (Exception e)
+                    {
+                        UnityEngine.Debug.Log(string.Format("[AssetBundleMapting.Init] Init Error  FileName : {0}   AssetBundleName : [1]  ",
+                            filePath, map.Key));
+                    }
+                }
+
+                assetBundleInfos.Add(info);
+            }
         }
 
-        public AssetBundleInfo[] assetBundles;
-        private Dictionary<string, string> m_FileMatchAssetBundles;
-
         public void Init()
+        {
+            m_FileMatchAssetBundleName = new Dictionary<string, string>();
+            foreach(var info in assetBundleInfos)
+            {
+                foreach(var file in info.files)
+                {
+                    m_FileMatchAssetBundleName.Add(file, info.name);
+                }
+            }
+        }
+
+        /*public void Init()
         {
             m_FileMatchAssetBundles = new Dictionary<string, string>();
 
             AssetBundleInfo info;
-            for(int i = 0; i < assetBundles.Length; ++ i)
+            for(int i = 0; i < assetBundleInfos.Length; ++ i)
             {
-                info = assetBundles[i];
+                info = assetBundleInfos[i];
                 for(int j = 0; j < info.files.Length; ++ j)
                 {
                     try
@@ -39,7 +72,7 @@ namespace FrameWork.Resource
                     }
                 }
             }
-        }
+        }*/
     }
 }
 

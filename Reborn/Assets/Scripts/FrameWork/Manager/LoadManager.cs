@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using FrameWork.Resource;
+using FrameWork.Helper;
 
 namespace FrameWork.Manager
 {
-    public class LoadManager : Singleton<LoadManager>
+    public sealed class LoadManager : Singleton<LoadManager>
     {
         private AssetBundleManifest m_Manifest;
-        private AssetBundleMapping m_mapping;
-        private List<string> m_BundleNames = new List<string>();
+        private AssetBundleMapping m_Mapping;
 
         private Dictionary<string, AssetBundleCache> m_AssetBundleCaches = new Dictionary<string, AssetBundleCache>(); // 缓存队列
 
@@ -19,7 +19,36 @@ namespace FrameWork.Manager
 
         private float m_LastClearTime = 0;
 
-        private void LoadManifest()
+        private List<string> m_AssetBundleNames = new List<string>();
+        public List<string> assetBundleNames { get { return m_AssetBundleNames; } }
+
+        private LoadTask m_LoadTask;
+
+        private List<string> m_SearchPaths = new List<string>();
+
+        public LoadManager()
+        {
+            m_LoadTask = new LoadTask();
+
+            if(ConstantData.enableAssetBundle)
+            {
+
+            }
+        }
+
+        private void LoadVersion()
+        {
+            if (ConstantData.enableMd5Name)
+            {
+            }
+            else
+                LoadAssetBundleManifest();
+        }
+
+        /// <summary>
+        /// Load assetbundle manifest
+        /// </summary>
+        private void LoadAssetBundleManifest()
         {
             if(null != m_Manifest)
             {
@@ -27,9 +56,9 @@ namespace FrameWork.Manager
                 m_Manifest = null;
             }
 
-            m_BundleNames.Clear();
+            m_AssetBundleNames.Clear();
 
-            LoadAssetBundle(ConstantData.ASSETBUNDLE_MANIFEST, (data)=> 
+            LoadAssetBundle(ConstantData.assetBundleManifest, (data)=> 
             {
                 AssetBundleCache abCache = data as AssetBundleCache;
                 if(null != abCache)
@@ -37,9 +66,67 @@ namespace FrameWork.Manager
                     m_Manifest = abCache.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
                 }
 
+                UnLoadAssetBundle(ConstantData.assetBundleManifest, true);
 
+                if(null != m_Manifest)
+                {
+                    string[] assetBundleNames = m_Manifest.GetAllAssetBundles();
+                    m_AssetBundleNames.AddRange(assetBundleNames);
+                }
 
             }, false, false, false);
+        }
+
+        /// <summary>
+        /// 加载assetbundle 映射表
+        /// file map assetbundle name
+        /// </summary>
+        private void LoadAssetBundleMapping()
+        {
+            LoadAssetFromBundle(ConstantData.assetBundleMappingName, ConstantData.assetBundleMappingName, typeof(AssetBundleMapping), (data)=> 
+            {
+                m_Mapping = data as AssetBundleMapping;
+                if(null != m_Mapping)
+                {
+                    m_Mapping.Init();
+                }
+            }, false, false, true);
+        }
+
+        public void LoadAssetFromBundle(string path, string name, System.Type type, UnityAction<object> callback, bool async, bool persistent, bool unload = false)
+        {
+            string fullPath = path;
+            if(!path.EndsWith(ConstantData.abExtend))
+            {
+                fullPath = string.Format("{0}{1}", path, ConstantData.abExtend);
+            }
+
+            fullPath = fullPath.ToLower();
+
+            LoadAssetBundle(fullPath, (data)=> 
+            {
+                AssetBundleCache cache = data as AssetBundleCache;
+                Object asset = null;
+                if(null != cache && !string.IsNullOrEmpty(name))
+                {
+                    asset = cache.LoadAsset(name, type);
+                }
+
+                if(null == asset)
+                {
+                    UnityEngine.Debug.LogFormat("[LoadManager.LoadAssetFromBundle], path: {0}, name : {1}, asset is null", path, name);
+                }
+
+                if(null != callback)
+                {
+                    callback(asset);
+                }
+
+                if(unload)
+                {
+                    UnLoadAssetBundle(path);
+                }
+            }, async, persistent);
         }
 
         public void LoadAsset(string path, System.Type type, UnityAction<object> callback, bool async = true, bool persistent = false, bool unload = false, bool inData = true)
@@ -148,7 +235,7 @@ namespace FrameWork.Manager
         }
 
         /// <summary>
-        /// 定时清楚 Assetbundle 缓存
+        /// 定时清除 Assetbundle 缓存
         /// </summary>
         private void UpdateAssetBundleCache()
         {
@@ -226,7 +313,59 @@ namespace FrameWork.Manager
 
         private bool HasBundle(string path)
         {
-            return m_BundleNames.Count == 0 || m_BundleNames.Contains(path) || string.Equals(path, ConstantData.ASSETBUNDLE_MANIFEST);
+            return m_AssetBundleNames.Count == 0 || m_AssetBundleNames.Contains(path) || string.Equals(path, ConstantData.assetBundleManifest);
+        }
+
+        public void LoadStream(string path, UnityAction<object> actionLoaded, bool async = true, bool remote = false, bool isFullPath = false)
+        {
+            string fullPath = path;
+            if(!remote)
+            {
+                if(!isFullPath)
+                    fullPath = SearchPath(path, false, false, false);
+            }
+            else
+            {
+                // 从服务器加载，一定是异步的
+                async = true;
+            }
+
+            m_LoadTask.AddLoadTask(LoaderType.Stream, fullPath, remote, actionLoaded, async);
+        }
+
+        public string SearchPath(string subPath, bool researchStreamAssetPath = false, bool addSuffix = false, bool isAssetBundle = true)
+        {
+            if(addSuffix)
+                subPath = string.Format("{0}{1}", subPath, ConstantData.abExtend);
+
+            string fullPath = string.Empty;
+
+            // 优先从查找目录找
+            foreach(var path in m_SearchPaths)
+            {
+                fullPath = string.Format("{0}/{1}", path, subPath);
+                if(FileHelper.Exists(fullPath))
+                {
+                    return fullPath;
+                }
+            }
+
+            // 不查找StreamAsset目录
+            if(!researchStreamAssetPath)
+            {
+                return "";
+            }
+
+            if(isAssetBundle)
+            {
+                fullPath = string.Format("{0}/{1}", ConstantData.assetBundleAbsolutePath, subPath);
+            }
+            else
+            {
+                fullPath = string.Format("{0}/{1}", Application.streamingAssetsPath, subPath);
+            }
+
+            return fullPath;
         }
     }
 }

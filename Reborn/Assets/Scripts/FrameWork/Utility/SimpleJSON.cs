@@ -625,7 +625,7 @@ namespace FrameWork.Utility
             m_List.Remove(aNode);
             return aNode;
         }
-        public override IEnumerable<JSONNode> Childs
+        public override IEnumerable<JSONNode> childs
         {
             get
             {
@@ -759,7 +759,7 @@ namespace FrameWork.Utility
             }
         }
  
-        public override IEnumerable<JSONNode> Childs
+        public override IEnumerable<JSONNode> childs
         {
             get
             {
@@ -824,19 +824,19 @@ namespace FrameWork.Utility
         }
         public JSONData(float aData)
         {
-            AsFloat = aData;
+            asFloat = aData;
         }
         public JSONData(double aData)
         {
-            AsDouble = aData;
+            asDouble = aData;
         }
         public JSONData(bool aData)
         {
-            AsBool = aData;
+            asBool = aData;
         }
         public JSONData(int aData)
         {
-            AsInt = aData;
+            asInt = aData;
         }
  
         public override string ToString()
@@ -851,33 +851,33 @@ namespace FrameWork.Utility
         {
             var tmp = new JSONData("");
  
-            tmp.AsInt = AsInt;
+            tmp.asInt = asInt;
             if (tmp.m_Data == this.m_Data)
             {
                 aWriter.Write((byte)JSONBinaryTag.IntValue);
-                aWriter.Write(AsInt);
+                aWriter.Write(asInt);
                 return;
             }
-            tmp.AsFloat = AsFloat;
+            tmp.asFloat = asFloat;
             if (tmp.m_Data == this.m_Data)
             {
                 aWriter.Write((byte)JSONBinaryTag.FloatValue);
-                aWriter.Write(AsFloat);
+                aWriter.Write(asFloat);
                 return;
             }
-            tmp.AsDouble = AsDouble;
+            tmp.asDouble = asDouble;
             if (tmp.m_Data == this.m_Data)
             {
                 aWriter.Write((byte)JSONBinaryTag.DoubleValue);
-                aWriter.Write(AsDouble);
+                aWriter.Write(asDouble);
                 return;
             }
  
-            tmp.AsBool = AsBool;
+            tmp.asBool = asBool;
             if (tmp.m_Data == this.m_Data)
             {
                 aWriter.Write((byte)JSONBinaryTag.BoolValue);
-                aWriter.Write(AsBool);
+                aWriter.Write(asBool);
                 return;
             }
             aWriter.Write((byte)JSONBinaryTag.Value);
@@ -984,7 +984,7 @@ namespace FrameWork.Utility
             return "";
         }
  
-        public override int AsInt
+        public override int asInt
         {
             get
             {
@@ -998,7 +998,7 @@ namespace FrameWork.Utility
                 Set(tmp);
             }
         }
-        public override float AsFloat
+        public override float asFloat
         {
             get
             {
@@ -1012,7 +1012,7 @@ namespace FrameWork.Utility
                 Set(tmp);
             }
         }
-        public override double AsDouble
+        public override double asDouble
         {
             get
             {
@@ -1026,7 +1026,7 @@ namespace FrameWork.Utility
                 Set(tmp);
             }
         }
-        public override bool AsBool
+        public override bool asBool
         {
             get
             {

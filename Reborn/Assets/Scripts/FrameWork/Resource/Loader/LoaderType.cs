@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace FrameWork.Resource
+﻿namespace FrameWork.Resource
 {
     public enum LoaderType
     {

@@ -23,6 +23,9 @@ namespace FrameWork.Helper
         /// <returns></returns>
         public static DirectoryInfo CreateDirectory(string path)
         {
+            if (Directory.Exists(path))
+                return null;
+
             return Directory.CreateDirectory(path);
         }
 

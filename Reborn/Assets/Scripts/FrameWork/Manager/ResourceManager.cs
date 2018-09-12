@@ -7,7 +7,7 @@ using UnityEngine.Events;
 
 namespace FrameWork.Manager
 {
-    public class ResourceManager : Singleton<ResourceManager>
+    public sealed class ResourceManager : Singleton<ResourceManager>
     {
         protected override void Dispose(bool disposing)
         {
