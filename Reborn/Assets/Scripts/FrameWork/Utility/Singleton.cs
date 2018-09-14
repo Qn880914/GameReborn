@@ -10,6 +10,8 @@
 
         private static object helper_lock;
 
+        protected Singleton() { }
+
         public static T instance
         {
             get

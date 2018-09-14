@@ -31,7 +31,7 @@ namespace FrameWork.Resource
             base.Load();
             string path = m_Path;
 
-            m_needUnpack = ConstantData.enableUnpack && path.Contains(ConstantData.streamingAssetsPath);
+            m_needUnpack = ConstantData.enableUnpack && path.Contains(ConstantData.assetBundleAbsolutePath);
 
             if (m_Async)
             {
