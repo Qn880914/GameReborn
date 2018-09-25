@@ -148,11 +148,11 @@ namespace FrameWork.Editor.Tool
                     List<float> frameTimes = GetFrameTimes(clipLength, frameInterval);
                     try
                     {
-                        defaultAnimationInfos[submeshCount][infoIdx].y = frame;
+                        defaultAnimationInfos[subMeshCount][infoIndex].y = frame;
                     }
                     catch
                     {
-                        Debug.LogError(defaultAnimationInfos.Length + "," + defaultAnimationInfos.LongLength + "," + submeshCount + "," + infoIdx);
+                        Debug.LogError(defaultAnimationInfos.Length + "," + defaultAnimationInfos.LongLength + "," + subMeshCount + "," + infoIndex);
                     }
                     foreach (float time in frameTimes)
                     {
@@ -181,7 +181,7 @@ namespace FrameWork.Editor.Tool
                         {
                             Matrix4x4 matrix = new Matrix4x4();
                             matrix.SetTRS(Vector2.zero, param.quaternionOffset, Vector3.one);
-                            bakeMesh = BakeFrameAfterMatrixTransform(renderArray[submeshCount], matrix);
+                            bakeMesh = BakeFrameAfterMatrixTransform(meshRenders[subMeshCount], matrix);
                         }
                         else
                         {
@@ -203,23 +203,25 @@ namespace FrameWork.Editor.Tool
                         animation.Stop();
                     }
                     //end frame position,exclude
-                    defaultAnimationInfos[submeshCount][infoIdx].z = frame;
+                    defaultAnimationInfos[subMeshCount][infoIndex].z = frame;
                 }
 
-                for (int i = 0; i < meshArray[submeshCount].uv.Length / 2; i++)
+                for (int i = 0; i < exportMeshs[subMeshCount].uv.Length / 2; i++)
                 {
                     int uvIdx = i * 2;
-                    colors[cfgDataIdx++] = new Color(meshArray[submeshCount].uv[uvIdx].x, meshArray[submeshCount].uv[uvIdx].y, meshArray[submeshCount].uv[uvIdx + 1].x, meshArray[submeshCount].uv[uvIdx + 1].y);
+                    colors[cfgDataIndex++] = new Color(exportMeshs[subMeshCount].uv[uvIdx].x, exportMeshs[subMeshCount].uv[uvIdx].y,
+                        exportMeshs[subMeshCount].uv[uvIdx + 1].x, exportMeshs[subMeshCount].uv[uvIdx + 1].y);
 
                 }
-                for (int i = 0; i < meshArray[submeshCount].triangles.Length / 3; i++)
+                for (int i = 0; i < exportMeshs[subMeshCount].triangles.Length / 3; i++)
                 {
                     int triIdx = i * 3;
-                    colors[cfgDataIdx++] = new Color(meshArray[submeshCount].triangles[triIdx], meshArray[submeshCount].triangles[triIdx + 1], meshArray[submeshCount].triangles[triIdx + 2]);
+                    colors[cfgDataIndex++] = new Color(exportMeshs[subMeshCount].triangles[triIdx], exportMeshs[subMeshCount].triangles[triIdx + 1], 
+                        exportMeshs[subMeshCount].triangles[triIdx + 2]);
                 }
             }
 
-            for (int j = 0; j < arrayLength; j++)
+            for (int j = 0; j < meshRenderCount; j++)
             {
 
                 for (int i = 0; i < 8; i++)
@@ -284,7 +286,7 @@ namespace FrameWork.Editor.Tool
 
             for (int i = 0; i < param.animationClips.Length; i++)
             {
-                if (param.animationClips[i] != null && string.IsNullOrEmpty(param.animationNames[i].Trim()))
+                if (param.animationClips[i] != null && string.IsNullOrEmpty(param.animationClipNames[i].Trim()))
                 {
                     EditorUtility.DisplayDialog("Missing Animation Name", "Please specify a name for all animation files.", "OK");
                     return false;
@@ -312,6 +314,55 @@ namespace FrameWork.Editor.Tool
             }
 
             return true;
+        }
+
+        // <summary>
+        /// Calculate the time periods when a frame snapshot should be taken
+        /// </summary>
+        /// <returns>The frame times.</returns>
+        /// <param name="pLength">P length.</param>
+        /// <param name="pInterval">P interval.</param>
+        public static List<float> GetFrameTimes(float pLength, float pInterval)
+        {
+            List<float> times = new List<float>();
+
+            float time = 0;
+
+            do
+            {
+                times.Add(time);
+                time += pInterval;
+            } while (time < pLength);
+
+            times.Add(pLength);
+
+            return times;
+        }
+
+        public static Mesh BakeFrameAfterMatrixTransform(SkinnedMeshRenderer pRenderer, Matrix4x4 matrix)
+        {
+            Mesh result = new Mesh();
+            pRenderer.BakeMesh(result);
+            result.vertices = TransformVertices(matrix, result.vertices);
+            return result;
+        }
+
+        /// <summary>
+        /// Convert a set of vertices using the given transform matrix.
+        /// </summary>
+        /// <returns>Transformed vertices</returns>
+        /// <param name="pLocalToWorld">Transform Matrix</param>
+        /// <param name="pVertices">Vertices to transform</param>
+        public static Vector3[] TransformVertices(Matrix4x4 pLocalToWorld, Vector3[] pVertices)
+        {
+            Vector3[] result = new Vector3[pVertices.Length];
+
+            for (int i = 0; i < pVertices.Length; i++)
+            {
+                result[i] = pLocalToWorld * pVertices[i];
+            }
+
+            return result;
         }
     }
 }

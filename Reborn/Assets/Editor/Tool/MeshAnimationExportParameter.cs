@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using FrameWork.Resource;
+using FrameWork.Utility;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -39,7 +41,7 @@ namespace FrameWork.Editor.Tool
 
         private GameObject m_PrefabParse;
 
-        private static readonly string MESH_ANIMATIONS_ABSOLUTE_FOLDER_PATH = Application.dataPath + "/" + ResourcesPath.TroopMeshAniPath;
+        private static readonly string MESH_ANIMATIONS_ABSOLUTE_FOLDER_PATH = Application.dataPath + "/" + ResourcePath.troopMeshAniPath;
 
         public void ParsePrefab(GameObject prefab)
         {
@@ -89,15 +91,15 @@ namespace FrameWork.Editor.Tool
 
         private void ParseOutputPath()
         {
-            string prefabPath = null == m_PrefabParse ? "" : AssetDatabase.GetAssetPath(PrefabUtility.GetPrefabParent(m_PrefabParse));
-            if (prefabPath.Length == 0)
+            string prefabPath = null == m_PrefabParse ? string.Empty : AssetDatabase.GetAssetPath(PrefabUtility.GetPrefabParent(m_PrefabParse));
+            if (string.IsNullOrEmpty(prefabPath))
             {
                 UnityEngine.Debug.LogError("Please use this tool with an instance of the prefab");
                 return;
             }
             
 
-            string objectFileName = convertStringToFileFormat(m_PrefabParse.name);
+            string objectFileName = ConvertStringToFileFormat(m_PrefabParse.name);
             string subFolderNameBossOrSoldier = Directory.GetParent(Application.dataPath + prefabPath).Name;
 
             string folderPath = MESH_ANIMATIONS_ABSOLUTE_FOLDER_PATH;
@@ -136,7 +138,7 @@ namespace FrameWork.Editor.Tool
         }
 
         // multi word names are supposed to map like WarBird => war_bird
-        private string convertStringToFileFormat(string pInput)
+        private string ConvertStringToFileFormat(string pInput)
         {
             System.Text.StringBuilder result = new System.Text.StringBuilder();
             foreach (char c in pInput)

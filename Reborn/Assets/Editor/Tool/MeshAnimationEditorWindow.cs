@@ -126,7 +126,7 @@ namespace FrameWork.Editor.Tool
                     }
 
                     //MeshAnimationExporter.Export(fbx, exportSettings);
-                    MeshAnimationExporter.ExportCombinedTexture(fbx, exportSettings);
+                    MeshAnimationExporter.ExportCombinedTexture(m_Prefab, m_MeshAnimationExportParameter);
                 }
             }
 
@@ -138,18 +138,18 @@ namespace FrameWork.Editor.Tool
         {
             float interval = 1.0f / m_MeshAnimationExportParameter.framerate;
 
-            if (m_MeshAnimationExportParameter.animationNames != null && m_MeshAnimationExportParameter.animationNames.Length > 0)
+            if (m_MeshAnimationExportParameter.animationClipNames != null && m_MeshAnimationExportParameter.animationClipNames.Length > 0)
             {
-                for (int i = 0; i < m_MeshAnimationExportParameter.animationNames.Length; i++)
+                for (int i = 0; i < m_MeshAnimationExportParameter.animationClipNames.Length; i++)
                 {
                     EditorGUILayout.BeginHorizontal();
-                    m_MeshAnimationExportParameter.animationNames[i] = EditorGUILayout.TextField(m_MeshAnimationExportParameter.animationNames[i], labelWidth);
+                    m_MeshAnimationExportParameter.animationClipNames[i] = EditorGUILayout.TextField(m_MeshAnimationExportParameter.animationClipNames[i], labelWidth);
 
                     AnimationClip clip = EditorGUILayout.ObjectField(m_MeshAnimationExportParameter.animationClips[i], typeof(AnimationClip), true, labelWidth) as AnimationClip;
 
                     if (clip != m_MeshAnimationExportParameter.animationClips[i] && clip != null)
                     {
-                        m_MeshAnimationExportParameter.animationNames[i] = clip.name;
+                        m_MeshAnimationExportParameter.animationClipNames[i] = clip.name;
                     }
 
                     m_MeshAnimationExportParameter.animationClips[i] = clip;
