@@ -1,10 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
 namespace FrameWork.BehaviorDesigner.Tasks
 {
-    public class TooltipAttribute
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
+    public class TooltipAttribute : Attribute
     {
+        public readonly string m_Tooltip;
+
+        public string tooltip
+        {
+            get
+            {
+                return this.m_Tooltip;
+            }
+        }
+
+        public TooltipAttribute(string tooltip)
+        {
+            this.m_Tooltip = tooltip;
+        }
     }
 }

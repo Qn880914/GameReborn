@@ -1,132 +1,123 @@
-﻿using System;
+﻿using FrameWork.BehaviorDesigner.Runtime;
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace FrameWork.BehaviorDesigner.Tasks
 {
     public abstract class Task
     {
-        protected GameObject gameObject;
+        protected GameObject m_GameObject;
+        public GameObject gameObject
+        {
+            set
+            {
+                this.m_GameObject = value;
+            }
+        }
 
-        protected Transform transform;
+        protected Transform m_Transform;
+        public Transform transform
+        {
+            set
+            {
+                this.m_Transform = value;
+            }
+        }
 
         [SerializeField]
-        private NodeData nodeData;
+        private NodeData m_NodeData;
+        public NodeData nodeData
+        {
+            get
+            {
+                return this.m_NodeData;
+            }
+            set
+            {
+                this.m_NodeData = value;
+            }
+        }
 
         [SerializeField]
-        private Behavior owner;
+        private Behavior m_Owner;
+        public Behavior owner
+        {
+            get
+            {
+                return this.m_Owner;
+            }
+            set
+            {
+                this.m_Owner = value;
+            }
+        }
 
         [SerializeField]
-        private int id = -1;
+        private int m_ID = -1;
+        public int id
+        {
+            get
+            {
+                return this.m_ID;
+            }
+            set
+            {
+                this.m_ID = value;
+            }
+        }
 
         [SerializeField]
-        private string friendlyName = string.Empty;
+        private string m_FriendlyName = string.Empty;
+        public string friendlyName
+        {
+            get
+            {
+                return this.m_FriendlyName;
+            }
+            set
+            {
+                this.m_FriendlyName = value;
+            }
+        }
 
         [SerializeField]
-        private bool instant = true;
-
-        private int referenceID = -1;
-
-        private bool disabled;
-
-        public GameObject GameObject
-        {
-            set
-            {
-                this.gameObject = value;
-            }
-        }
-
-        public Transform Transform
-        {
-            set
-            {
-                this.transform = value;
-            }
-        }
-
-        public NodeData NodeData
+        private bool m_IsInstant = true;
+        public bool isInstant
         {
             get
             {
-                return this.nodeData;
+                return this.m_IsInstant;
             }
             set
             {
-                this.nodeData = value;
+                this.m_IsInstant = value;
             }
         }
 
-        public Behavior Owner
+        private int m_ReferenceID = -1;
+        public int referenceID
         {
             get
             {
-                return this.owner;
+                return this.m_ReferenceID;
             }
             set
             {
-                this.owner = value;
+                this.m_ReferenceID = value;
             }
         }
 
-        public int ID
+        private bool m_Disabled;
+        public bool disabled
         {
             get
             {
-                return this.id;
+                return this.m_Disabled;
             }
             set
             {
-                this.id = value;
-            }
-        }
-
-        public string FriendlyName
-        {
-            get
-            {
-                return this.friendlyName;
-            }
-            set
-            {
-                this.friendlyName = value;
-            }
-        }
-
-        public bool IsInstant
-        {
-            get
-            {
-                return this.instant;
-            }
-            set
-            {
-                this.instant = value;
-            }
-        }
-
-        public int ReferenceID
-        {
-            get
-            {
-                return this.referenceID;
-            }
-            set
-            {
-                this.referenceID = value;
-            }
-        }
-
-        public bool Disabled
-        {
-            get
-            {
-                return this.disabled;
-            }
-            set
-            {
-                this.disabled = value;
+                this.m_Disabled = value;
             }
         }
 
@@ -187,32 +178,32 @@ namespace FrameWork.BehaviorDesigner.Tasks
 
         protected void StartCoroutine(string methodName)
         {
-            this.Owner.StartTaskCoroutine(this, methodName);
+            this.owner.StartTaskCoroutine(this, methodName);
         }
 
         protected Coroutine StartCoroutine(IEnumerator routine)
         {
-            return this.Owner.StartCoroutine(routine);
+            return this.owner.StartCoroutine(routine);
         }
 
         protected Coroutine StartCoroutine(string methodName, object value)
         {
-            return this.Owner.StartTaskCoroutine(this, methodName, value);
+            return this.owner.StartTaskCoroutine(this, methodName, value);
         }
 
         protected void StopCoroutine(string methodName)
         {
-            this.Owner.StopTaskCoroutine(methodName);
+            this.owner.StopTaskCoroutine(methodName);
         }
 
         protected void StopCoroutine(IEnumerator routine)
         {
-            this.Owner.StopCoroutine(routine);
+            this.owner.StopCoroutine(routine);
         }
 
         protected void StopAllCoroutines()
         {
-            this.Owner.StopAllTaskCoroutines();
+            this.owner.StopAllTaskCoroutines();
         }
 
         public virtual void OnCollisionEnter(Collision collision)
@@ -257,20 +248,21 @@ namespace FrameWork.BehaviorDesigner.Tasks
 
         protected T GetComponent<T>() where T : Component
         {
-            return this.gameObject.GetComponent<T>();
+            return this.m_GameObject.GetComponent<T>();
         }
 
         protected Component GetComponent(Type type)
         {
-            return this.gameObject.GetComponent(type);
+            return this.m_GameObject.GetComponent(type);
         }
 
         protected GameObject GetDefaultGameObject(GameObject go)
         {
             if (go == null)
             {
-                return this.gameObject;
+                return this.m_GameObject;
             }
+
             return go;
         }
     }

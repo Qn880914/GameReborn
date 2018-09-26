@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
 namespace FrameWork.BehaviorDesigner.Tasks
 {
-    public class ObjectDrawerAttribute
+    [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = false)]
+    public abstract class ObjectDrawerAttribute : Attribute
     {
     }
 }

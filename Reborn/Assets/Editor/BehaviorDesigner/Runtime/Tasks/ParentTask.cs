@@ -6,17 +6,17 @@ namespace FrameWork.BehaviorDesigner.Tasks
     public abstract class ParentTask : Task
     {
         [SerializeField]
-        protected List<Task> children;
+        protected List<Task> m_Children;
 
-        public List<Task> Children
+        public List<Task> children
         {
             get
             {
-                return this.children;
+                return this.m_Children;
             }
             private set
             {
-                this.children = value;
+                this.m_Children = value;
             }
         }
 

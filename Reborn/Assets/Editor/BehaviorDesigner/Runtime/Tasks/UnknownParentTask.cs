@@ -1,10 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace FrameWork.BehaviorDesigner.Tasks
+﻿namespace FrameWork.BehaviorDesigner.Tasks
 {
-    public class UnknownParentTask
+    public class UnknownParentTask : ParentTask
     {
     }
 }

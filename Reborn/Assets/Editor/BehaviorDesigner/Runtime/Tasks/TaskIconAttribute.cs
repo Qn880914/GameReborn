@@ -1,10 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
 namespace FrameWork.BehaviorDesigner.Tasks
 {
-    public class TaskIconAttribute
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public class TaskIconAttribute : Attribute
     {
+        public readonly string m_IconPath;
+
+        public string iconPath
+        {
+            get
+            {
+                return this.m_IconPath;
+            }
+        }
+
+        public TaskIconAttribute(string iconPath)
+        {
+            this.m_IconPath = iconPath;
+        }
     }
 }

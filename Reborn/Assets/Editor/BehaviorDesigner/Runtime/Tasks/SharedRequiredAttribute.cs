@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
 namespace FrameWork.BehaviorDesigner.Tasks
 {
-    public class SharedRequiredAttribute
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = false, Inherited = false)]
+    public class SharedRequiredAttribute : Attribute
     {
     }
 }

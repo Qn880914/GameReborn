@@ -1,10 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
 namespace FrameWork.BehaviorDesigner.Tasks
 {
-    public class TaskDescriptionAttribute
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public class TaskDescriptionAttribute : Attribute
     {
+        public readonly string m_Description;
+
+        public string description
+        {
+            get
+            {
+                return this.m_Description;
+            }
+        }
+
+        public TaskDescriptionAttribute(string description)
+        {
+            this.m_Description = description;
+        }
     }
 }

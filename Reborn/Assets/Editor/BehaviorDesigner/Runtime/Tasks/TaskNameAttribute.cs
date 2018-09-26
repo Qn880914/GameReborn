@@ -1,10 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
 namespace FrameWork.BehaviorDesigner.Tasks
 {
-    public class TaskNameAttribute
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public class TaskNameAttribute : Attribute
     {
+        public readonly string m_Name;
+
+        public string name
+        {
+            get
+            {
+                return this.m_Name;
+            }
+        }
+
+        public TaskNameAttribute(string name)
+        {
+            this.m_Name = name;
+        }
     }
 }

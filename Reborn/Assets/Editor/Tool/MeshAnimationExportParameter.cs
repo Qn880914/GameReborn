@@ -86,7 +86,6 @@ namespace FrameWork.Editor.Tool
                 ++index;
             }
             GameObject.DestroyImmediate(go);
-
         }
 
         private void ParseOutputPath()
@@ -96,8 +95,7 @@ namespace FrameWork.Editor.Tool
             {
                 UnityEngine.Debug.LogError("Please use this tool with an instance of the prefab");
                 return;
-            }
-            
+            }            
 
             string objectFileName = ConvertStringToFileFormat(m_PrefabParse.name);
             string subFolderNameBossOrSoldier = Directory.GetParent(Application.dataPath + prefabPath).Name;
@@ -149,6 +147,7 @@ namespace FrameWork.Editor.Tool
                 }
                 result.Append(System.Char.ToLower(c));
             }
+
             return result.ToString();
         }
     }

@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace FrameWork.BehaviorDesigner.Tasks
+﻿namespace FrameWork.BehaviorDesigner.Tasks
 {
-    public class Decorator
+    public class Decorator : ParentTask
     {
+        public override int MaxChildren()
+        {
+            return 1;
+        }
     }
 }
