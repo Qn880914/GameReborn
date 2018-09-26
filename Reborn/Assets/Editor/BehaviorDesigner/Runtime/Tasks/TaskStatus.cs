@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TaskStatus : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+namespace FrameWork.BehaviorDesigner.Tasks
+{
+    public enum TaskStatus
+    {
+        Inactive,
+        Failure,
+        Success,
+        Running
+    }
 }

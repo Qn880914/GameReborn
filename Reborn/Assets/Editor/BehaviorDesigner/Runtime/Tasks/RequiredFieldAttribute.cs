@@ -2,15 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RequiredFieldAttribute : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+namespace FrameWork.BehaviorDesigner.Tasks
+{
+    public class RequiredFieldAttribute
+    {
+    }
 }

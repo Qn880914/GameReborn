@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace FrameWork.BehaviorDesigner.Runtime
+﻿namespace FrameWork.BehaviorDesigner.Runtime
 {
     public interface IBehavior
     {
@@ -14,12 +10,12 @@ namespace FrameWork.BehaviorDesigner.Runtime
 
         void SetBehaviorSource(BehaviorSource behaviorSource);
 
-        Object GetObject();
+        UnityEngine.Object GetObject();
 
         SharedVariable GetVariable(string name);
 
         void SetVariable(string name, SharedVariable item);
 
-        void SetVariable(string name, object value);
+        void SetVariableValue(string name, object value);
     }
 }

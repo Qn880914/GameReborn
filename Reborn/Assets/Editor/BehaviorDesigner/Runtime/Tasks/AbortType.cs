@@ -1,22 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace FrameWork.BehaviorDesigner.Tasks
+﻿namespace FrameWork.BehaviorDesigner.Tasks
 {
-    public class AbortType : MonoBehaviour
+    public enum AbortType
     {
-
-        // Use this for initialization
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
+        None,
+        Self,
+        LowerPriority,
+        Both
     }
 }
