@@ -5,7 +5,7 @@ namespace FrameWork.Resource
 {
     public class StreamLoader : Loader
     {
-        WWW m_request = null;
+        WWW m_Request = null;
 
         public StreamLoader()
             : base(LoaderType.Stream)
@@ -15,10 +15,10 @@ namespace FrameWork.Resource
         {
             base.Reset();
 
-            if (m_request != null)
+            if (m_Request != null)
             {
-                m_request.Dispose();
-                m_request = null;
+                m_Request.Dispose();
+                m_Request = null;
             }
         }
 
@@ -47,7 +47,7 @@ namespace FrameWork.Resource
                     }
                 }
 
-                m_request = new WWW(path);
+                m_Request = new WWW(path);
             }
             else
             {
@@ -72,22 +72,22 @@ namespace FrameWork.Resource
         {
             if (m_State == LoaderState.Loading)
             {
-                if (m_request == null)
+                if (m_Request == null)
                 {
                     OnLoadCompleted(null);
                 }
-                else if (!string.IsNullOrEmpty(m_request.error))
+                else if (!string.IsNullOrEmpty(m_Request.error))
                 {
-                    UnityEngine.Debug.Log(m_request.error);
+                    UnityEngine.Debug.Log(m_Request.error);
                     OnLoadCompleted(null);
                 }
-                else if (m_request.isDone)
+                else if (m_Request.isDone)
                 {
-                    OnLoadCompleted(m_request.bytes);
+                    OnLoadCompleted(m_Request.bytes);
                 }
                 else
                 {
-                    OnLoadProgress(m_request.progress);
+                    OnLoadProgress(m_Request.progress);
                 }
             }
         }

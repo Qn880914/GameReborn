@@ -5,11 +5,11 @@ namespace FrameWork.Resource
 {
     public class BundleLoader : Loader
     {
-        AssetBundleCreateRequest m_abRequest = null;
-        LZMACompressRequest m_decompressRequest = null;
-        bool m_needUnpack = false;
-        int m_stageCurrent = 0;
-        int m_stageCount = 1;
+        private AssetBundleCreateRequest m_abRequest = null;
+        private LZMACompressRequest m_DecompressRequest = null;
+        private bool m_NeedUnpack = false;
+        private int m_StageCurrent = 0;
+        private int m_StageCount = 1;
 
         public BundleLoader()
             : base(LoaderType.Bundle)
@@ -20,10 +20,10 @@ namespace FrameWork.Resource
             base.Reset();
 
             m_abRequest = null;
-            m_decompressRequest = null;
+            m_DecompressRequest = null;
 
-            m_stageCurrent = 0;
-            m_stageCount = 1;
+            m_StageCurrent = 0;
+            m_StageCount = 1;
         }
 
         public override void Load()
@@ -31,16 +31,16 @@ namespace FrameWork.Resource
             base.Load();
             string path = m_Path;
 
-            m_needUnpack = ConstantData.enableUnpack && path.Contains(ConstantData.assetBundleAbsolutePath);
+            m_NeedUnpack = ConstantData.enableUnpack && path.Contains(ConstantData.assetBundleAbsolutePath);
 
             if (m_Async)
             {
-                if (m_needUnpack)
+                if (m_NeedUnpack)
                 {
-                    m_stageCount = 2;
+                    m_StageCount = 2;
 
                     byte[] bytes = FileHelper.ReadByteFromFile(path);
-                    m_decompressRequest = LZMACompressRequest.CreateDecompress(bytes);
+                    m_DecompressRequest = LZMACompressRequest.CreateDecompress(bytes);
                 }
                 else
                 {
@@ -52,7 +52,7 @@ namespace FrameWork.Resource
                 AssetBundle ab = null;
                 try
                 {
-                    if (m_needUnpack)
+                    if (m_NeedUnpack)
                     {
                         byte[] bytes = FileHelper.ReadByteFromFile(path);
                         byte[] result = new byte[1];
@@ -90,7 +90,7 @@ namespace FrameWork.Resource
                 {
                     if (m_abRequest.isDone)
                     {
-                        ++m_stageCurrent;
+                        ++m_StageCurrent;
                         OnLoaded(m_abRequest.assetBundle);
                     }
                     else
@@ -98,19 +98,19 @@ namespace FrameWork.Resource
                         DoProgress(m_abRequest.progress);
                     }
                 }
-                else if (m_decompressRequest != null)
+                else if (m_DecompressRequest != null)
                 {
-                    if (m_decompressRequest.isDone)
+                    if (m_DecompressRequest.isDone)
                     {
-                        ++m_stageCurrent;
-                        m_abRequest = AssetBundle.LoadFromMemoryAsync(m_decompressRequest.datas);
+                        ++m_StageCurrent;
+                        m_abRequest = AssetBundle.LoadFromMemoryAsync(m_DecompressRequest.datas);
 
-                        m_decompressRequest.Dispose();
-                        m_decompressRequest = null;
+                        m_DecompressRequest.Dispose();
+                        m_DecompressRequest = null;
                     }
                     else
                     {
-                        DoProgress(m_decompressRequest.progress);
+                        DoProgress(m_DecompressRequest.progress);
                     }
                 }
             }
@@ -118,7 +118,7 @@ namespace FrameWork.Resource
 
         void DoProgress(float rate)
         {
-            OnLoadProgress((m_stageCurrent + rate) / m_stageCount);
+            OnLoadProgress((m_StageCurrent + rate) / m_StageCount);
         }
 
         void OnLoaded(AssetBundle ab)

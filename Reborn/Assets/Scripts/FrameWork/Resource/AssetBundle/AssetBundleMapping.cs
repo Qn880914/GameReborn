@@ -6,13 +6,17 @@ namespace FrameWork.Resource
 {
     public sealed class AssetBundleMapping : ScriptableObject
     {
-        public List<AssetBundleInfo> assetBundleInfos { get; set; }
+        private List<AssetBundleInfo> m_AssetBundleInfos;
+        public List<AssetBundleInfo> assetBundleInfos { get { return m_AssetBundleInfos; } set { m_AssetBundleInfos = value; } }
 
+        /// <summary>
+        /// 资源文件名   map  assetbundle名
+        /// </summary>
         private Dictionary<string, string> m_FileMatchAssetBundleName;
 
         public void Init(Dictionary<string, HashSet<string>> assetbundleMapFilePaths)
         {
-            assetBundleInfos = new List<AssetBundleInfo>(assetbundleMapFilePaths.Count); 
+            m_AssetBundleInfos = new List<AssetBundleInfo>(assetbundleMapFilePaths.Count); 
             foreach(var map in assetbundleMapFilePaths)
             {
                 AssetBundleInfo info = new AssetBundleInfo();
@@ -35,14 +39,14 @@ namespace FrameWork.Resource
                     }
                 }
 
-                assetBundleInfos.Add(info);
+                m_AssetBundleInfos.Add(info);
             }
         }
 
         public void Init()
         {
             m_FileMatchAssetBundleName = new Dictionary<string, string>();
-            foreach(var info in assetBundleInfos)
+            foreach(var info in m_AssetBundleInfos)
             {
                 foreach(var file in info.files)
                 {
